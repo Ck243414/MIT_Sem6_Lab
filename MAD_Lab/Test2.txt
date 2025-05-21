@@ -1,0 +1,163 @@
+MainActivity.java (Menu Page)
+package com.example.foodmenu;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    private CheckBox pizzaCheckBox, burgerCheckBox, pastaCheckBox;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        pizzaCheckBox = findViewById(R.id.checkPizza);
+        burgerCheckBox = findViewById(R.id.checkBurger);
+        pastaCheckBox = findViewById(R.id.checkPasta);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_checkout) {
+            processCheckout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void processCheckout() {
+        StringBuilder selectedItems = new StringBuilder();
+        double total = 0;
+
+        if (pizzaCheckBox.isChecked()) {
+            selectedItems.append("Pizza - $10.99\n");
+            total += 10.99;
+        }
+        if (burgerCheckBox.isChecked()) {
+            selectedItems.append("Burger - $5.49\n");
+            total += 5.49;
+        }
+        if (pastaCheckBox.isChecked()) {
+            selectedItems.append("Pasta - $7.99\n");
+            total += 7.99;
+        }
+
+        if (total == 0) {
+            Toast.makeText(this, "Select items before checkout!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double tax = total * 0.1;
+        double grandTotal = total + tax;
+
+        Intent intent = new Intent(this, CheckoutActivity.class);
+        intent.putExtra("items", selectedItems.toString());
+        intent.putExtra("total", total);
+        intent.putExtra("tax", tax);
+        intent.putExtra("grandTotal", grandTotal);
+        startActivity(intent);
+    }
+}
+
+
+
+CheckoutActivity.java (Checkout Page)
+package com.example.foodmenu;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class CheckoutActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_checkout);
+
+        TextView txtBill = findViewById(R.id.txtBill);
+
+        Intent intent = getIntent();
+        String items = intent.getStringExtra("items");
+        double total = intent.getDoubleExtra("total", 0);
+        double tax = intent.getDoubleExtra("tax", 0);
+        double grandTotal = intent.getDoubleExtra("grandTotal", 0);
+
+        String bill = "Selected Items:\n" + items +
+                "\nTotal: $" + String.format("%.2f", total) +
+                "\nTax (10%): $" + String.format("%.2f", tax) +
+                "\nGrand Total: $" + String.format("%.2f", grandTotal);
+
+        txtBill.setText(bill);
+    }
+}
+
+
+activity_main.xml (Menu Page UI)
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView android:text="Select Your Dishes"
+        android:textSize="22sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <CheckBox android:id="@+id/checkPizza"
+        android:text="Pizza - $10.99"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox android:id="@+id/checkBurger"
+        android:text="Burger - $5.49"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox android:id="@+id/checkPasta"
+        android:text="Pasta - $7.99"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+
+ activity_checkout.xml (Checkout Page UI)
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView android:id="@+id/txtBill"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+
+res/menu/menu_main.xml (Menu File)
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_checkout"
+        android:title="Checkout"
+        android:showAsAction="always"/>
+</menu>
+
+
+AndroidManifest.xml (Register CheckoutActivity)
+<activity android:name=".CheckoutActivity"></activity>
+
+
