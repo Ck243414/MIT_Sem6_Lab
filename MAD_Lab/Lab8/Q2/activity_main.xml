@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Grocery Manager"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Item"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Name"
+        android:inputType="text"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextItemCost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Item Cost"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAddItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Items"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selected Items"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"/>
+
+    <ListView
+        android:id="@+id/listViewCart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total: $0.00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="end"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

@@ -1,0 +1,195 @@
+package com.example.grocerymanager;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText editTextItemName, editTextItemCost;
+    private Button buttonAddItem, buttonAddToCart;
+    private Spinner spinnerItems;
+    private ListView listViewCart;
+    private TextView textViewTotal;
+
+    private DatabaseHelper dbHelper;
+    private List<String> itemNames = new ArrayList<>();
+    private Map<String, Double> itemCosts = new HashMap<>();
+    private List<String> cartItems = new ArrayList<>();
+    private double totalCost = 0.0;
+
+    private ArrayAdapter<String> spinnerAdapter;
+    private ArrayAdapter<String> cartAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize database helper
+        dbHelper = new DatabaseHelper(this);
+
+        // Initialize UI components
+        editTextItemName = findViewById(R.id.editTextItemName);
+        editTextItemCost = findViewById(R.id.editTextItemCost);
+        buttonAddItem = findViewById(R.id.buttonAddItem);
+        spinnerItems = findViewById(R.id.spinnerItems);
+        buttonAddToCart = findViewById(R.id.buttonAddToCart);
+        listViewCart = findViewById(R.id.listViewCart);
+        textViewTotal = findViewById(R.id.textViewTotal);
+
+        // Set up adapters
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemNames);
+        spinnerItems.setAdapter(spinnerAdapter);
+
+        cartAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cartItems);
+        listViewCart.setAdapter(cartAdapter);
+
+        // Load items from database
+        loadItems();
+
+        // Set up button click listeners
+        buttonAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
+
+        buttonAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToCart();
+            }
+        });
+    }
+
+    private void loadItems() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_NAME,
+                new String[]{DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_COST},
+                null, null, null, null, null
+        );
+
+        itemNames.clear();
+        itemCosts.clear();
+
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME));
+            double cost = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COST));
+
+            itemNames.add(name);
+            itemCosts.put(name, cost);
+        }
+
+        cursor.close();
+        spinnerAdapter.notifyDataSetChanged();
+    }
+
+    private void addItem() {
+        String itemName = editTextItemName.getText().toString().trim();
+        String itemCostStr = editTextItemCost.getText().toString().trim();
+
+        if (itemName.isEmpty() || itemCostStr.isEmpty()) {
+            Toast.makeText(this, "Please enter both item name and cost", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double itemCost;
+        try {
+            itemCost = Double.parseDouble(itemCostStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Invalid cost value", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Add to database
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_NAME, itemName);
+        values.put(DatabaseHelper.COLUMN_COST, itemCost);
+
+        long newRowId = db.insert(DatabaseHelper.TABLE_NAME, null, values);
+
+        if (newRowId != -1) {
+            Toast.makeText(this, "Item added successfully", Toast.LENGTH_SHORT).show();
+            // Clear input fields
+            editTextItemName.setText("");
+            editTextItemCost.setText("");
+            // Reload items
+            loadItems();
+        } else {
+            Toast.makeText(this, "Error adding item", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addToCart() {
+        if (itemNames.isEmpty()) {
+            Toast.makeText(this, "No items available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String selectedItem = spinnerItems.getSelectedItem().toString();
+        double cost = itemCosts.get(selectedItem);
+
+        cartItems.add(selectedItem + " - $" + String.format("%.2f", cost));
+        cartAdapter.notifyDataSetChanged();
+
+        totalCost += cost;
+        updateTotal();
+    }
+
+    private void updateTotal() {
+        textViewTotal.setText("Total: $" + String.format("%.2f", totalCost));
+    }
+
+    // Database Helper class
+    private class DatabaseHelper extends SQLiteOpenHelper {
+        public static final String DATABASE_NAME = "grocery.db";
+        public static final int DATABASE_VERSION = 1;
+        public static final String TABLE_NAME = "items";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_COST = "cost";
+
+        private static final String SQL_CREATE_TABLE =
+                "CREATE TABLE " + TABLE_NAME + " (" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_NAME + " TEXT UNIQUE, " +
+                        COLUMN_COST + " REAL)";
+
+        public DatabaseHelper(MainActivity context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL(SQL_CREATE_TABLE);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            onCreate(db);
+        }
+    }
+}
