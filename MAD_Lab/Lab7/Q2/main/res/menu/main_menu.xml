@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_my_menu"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="My Menu"
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/menu_image1"
+                android:title="Image-1"/>
+
+            <item
+                android:id="@+id/menu_image2"
+                android:title="Image-2"/>
+        </menu>
+    </item>
+</menu>
