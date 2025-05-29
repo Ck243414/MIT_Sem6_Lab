@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Movie Ticket Booking"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Movie Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Movie:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/movieSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Theatre Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Theatre:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/theatreSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Date Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Date:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:text="Select Date"/>
+
+            <Button
+                android:id="@+id/dateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Date"/>
+        </LinearLayout>
+
+        <!-- Time Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Showtime:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/timeTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:text="Select Time"/>
+
+            <Button
+                android:id="@+id/timeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Time"/>
+        </LinearLayout>
+
+        <!-- Ticket Type Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ticket Type:"
+                android:textSize="16sp"/>
+
+            <ToggleButton
+                android:id="@+id/ticketTypeToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="Premium"
+                android:textOff="Standard"/>
+        </LinearLayout>
+
+        <!-- Premium Info (Visible when Premium is selected) -->
+        <TextView
+            android:id="@+id/premiumInfoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Note: Premium tickets can only be booked for shows after 12:00 PM"
+            android:textColor="#E53935"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Number of Tickets -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of Tickets:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/ticketsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Enter number of tickets"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Reset"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/bookButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Book Now"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
